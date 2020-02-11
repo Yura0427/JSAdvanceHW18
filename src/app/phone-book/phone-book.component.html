@@ -1,0 +1,65 @@
+<h1>Angular phone book</h1>
+<form class="form-inline">
+  <div class="form-group mx-sm-4 mb-2">
+    <input type="search" class="form-control" [(ngModel)]="searchVal" name="searchVal" (input)="search(collection)">
+  </div>
+  <button type="button" class="btn btn-primary" (click)="openModal(template)">Add phone</button>
+</form>
+
+<ng-template #template>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Add phone</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <input type="text" class="form-control mb-3" [(ngModel)]="newFirstName" name="newFirstName"
+      placeholder="first name">
+    <input type="text" class="form-control mb-3" [(ngModel)]="newLastName" name="newLastName" placeholder="last name">
+    <input type="text" class="form-control mb-3" [(ngModel)]="newNumber" name="newNumber" placeholder="number">
+    <input type="button" *ngIf="!editStatus" (click)="addPerson()" value="ADD" class="btn btn-success">
+    <input type="button" *ngIf="editStatus" (click)="savePerson()" value="Save" class="btn btn-success">
+  </div>
+</ng-template>
+
+<div class="col-md-auto">
+  <table class="table">
+    <thead>
+      <tr>
+        <th [class.active]="order === 'id'" (click)="setOrder('id')">
+          ID <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+        </th>
+        <th [class.active]="order === 'firstName'" (click)="setOrder('firstName')"
+          class="mdl-data-table__cell--non-numeric">
+          First Name <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+        </th>
+        <th [class.active]="order === 'lastName'" (click)="setOrder('lastName')"
+          class="mdl-data-table__cell--non-numeric">
+          Last Name <span [hidden]="reverse">▼</span><span [hidden]="!reverse">▲</span>
+        </th>
+        <th [class.active]="order === 'number'" (click)="setOrder('number')">
+          Phone number <span [hidden]="reverse">▼</span>
+          <span [hidden]="!reverse">▲</span>
+        </th>
+        <th>Edit</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let row of newColl | orderBy: order:reverse:'case-insensitive'">
+        <td>{{ row.id }}</td>
+        <td>{{ row.firstName }}</td>
+        <td>{{ row.lastName }}</td>
+        <td>{{ row.number }}</td>
+        <td>
+          <input type="button" (click)="editPerson(template, row.id)" value="Edit" class="btn btn-warning">
+        </td>
+        <td>
+          <input type="button" (click)="delPerson(row.id)" value="delete" class="btn btn-danger">
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+</div>
